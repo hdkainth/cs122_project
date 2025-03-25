@@ -1,5 +1,6 @@
 # CS 122 Project
 Project Title: SJSU Parking Tracker
+
 Authors: Hardeep Kainth, Ynha Nguyen
 
 # Project Outline and Plan

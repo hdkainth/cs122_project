@@ -1,7 +1,8 @@
 import tkinter as tk
+import pandas as pd
 from tkcalendar import DateEntry
 from datetime import date, timedelta
-
+import parking_analysis
 import sjsu_parking_db_reader as db_reader
 
 # create a class called CanvasCoords
@@ -88,14 +89,23 @@ class ParkingApplication:
     def select_plot(self, type):
         self.plot_type = type
         print(self.plot_type)
-
+    
     def show_plot(self):
         plot_option = self.plot_type.get()
-        if plot_option == "Custom":
-            print(f"Show plot of type {plot_option} start date {self.start_date_custom.get_date()} end date {self.end_date_custom.get_date()}")
-        else:
-            print(f"Show plot of type {plot_option}")
 
+        if plot_option == "Today":
+            parking_analysis.analyze_parking(view="daily")
+
+        elif plot_option == "Week":
+            parking_analysis.analyze_parking(view="weekly")
+
+        elif plot_option == "Month":
+            parking_analysis.analyze_parking(view="monthly")
+
+        elif plot_option == "Full":
+            parking_analysis.analyze_parking(view="daily")
+            parking_analysis.analyze_parking(view="weekly")
+            parking_analysis.analyze_parking(view="monthly")
 
 root = tk.Tk()
 root.geometry("400x350")

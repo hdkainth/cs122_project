@@ -1,7 +1,7 @@
 import tkinter as tk
 import pandas as pd
 from tkcalendar import DateEntry
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 import parking_analysis
 import sjsu_parking_db_reader as db_reader
 
@@ -74,38 +74,61 @@ class ParkingApplication:
         self.start_date_custom.set_date(date.today() + timedelta(-7))
         self.end_date_custom.set_date(date.today() + timedelta(0))
 
-        self.start_date_custom.config(state="disabled")
+        # self.start_date_custom.config(state="disabled")
         self.end_date_custom.config(state="disabled")
 
     def selection_changed(self):
+        plot_option = self.plot_type.get()
         option = self.plot_type.get()
         if (option == "Custom"):
             self.start_date_custom.config(state="normal")
             self.end_date_custom.config(state="normal")
         else:
-            self.start_date_custom.config(state="disabled")
+            # self.start_date_custom.config(state="disabled")
+            self.start_date_custom.config(state="normal")
             self.end_date_custom.config(state="disabled")
 
     def select_plot(self, type):
         self.plot_type = type
         print(self.plot_type)
     
-    def show_plot(self):
+    # display the correct plot based on the option selected
+    def show_plot(self): 
         plot_option = self.plot_type.get()
 
+        # display the plot for today's garage fullness
         if plot_option == "Today":
-            parking_analysis.analyze_parking(view="daily")
+            start_date = self.start_date_custom.get_date()  
+            start = datetime.combine(start_date, datetime.min.time())  
+            end = datetime.now()  
+            parking_analysis.analyze_parking(view="daily", start_time=start, end_time=end)
 
+        # display the plot for this week's garage fullness
         elif plot_option == "Week":
-            parking_analysis.analyze_parking(view="weekly")
+            start_date = self.start_date_custom.get_date() 
+            end = start_date + timedelta(days=7)  
+            parking_analysis.analyze_parking(view="weekly", start_time=start_date, end_time=end)
 
+        # displays the plot for this month's garage fullness
         elif plot_option == "Month":
-            parking_analysis.analyze_parking(view="monthly")
+            start_date = self.start_date_custom.get_date()  
+            end = start_date + timedelta(days=30)  
+            parking_analysis.analyze_parking(view="monthly", start_time=start_date, end_time=end)
 
+        # displays all plots in a single popup
         elif plot_option == "Full":
-            parking_analysis.analyze_parking(view="daily")
-            parking_analysis.analyze_parking(view="weekly")
-            parking_analysis.analyze_parking(view="monthly")
+            start_date = self.start_date_custom.get_date()  
+            start = datetime.combine(start_date, datetime.min.time())  
+            end = datetime.now()  
+            parking_analysis.analyze_parking(view="all", start_time=start, end_time=end)
+        
+        # will display a custom plot
+        elif plot_option == "Custom":
+            start = self.start_date_custom.get_date()
+            end = self.end_date_custom.get_date()
+            start_datetime = datetime.combine(start, datetime.min.time()) 
+            end_datetime = datetime.combine(end, datetime.max.time()) 
+            parking_analysis.analyze_parking(view="custom", start_time=start_datetime, end_time=end_datetime)
 
 root = tk.Tk()
 root.geometry("400x350")

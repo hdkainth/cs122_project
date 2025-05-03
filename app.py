@@ -38,7 +38,7 @@ class ParkingApplication:
 
         title.pack(side=tk.TOP, anchor='nw', padx=10, pady=10)
         self.selection_frame.pack(side=tk.TOP, anchor='nw', padx=10, pady=10)
-        show_plot_button.pack(side=tk.BOTTOM, anchor='s', padx=10, pady=10)
+        show_plot_button.pack(side=tk.BOTTOM, padx=10, pady=10)
 
         self.db_reader = db_reader.ParkingDBReader()
 
@@ -75,6 +75,7 @@ class ParkingApplication:
         self.end_date_custom.set_date(date.today() + timedelta(0))
 
         # self.start_date_custom.config(state="disabled")
+        self.start_date_custom.config(state="disabled")
         self.end_date_custom.config(state="disabled")
 
     def selection_changed(self):
@@ -85,7 +86,7 @@ class ParkingApplication:
             self.end_date_custom.config(state="normal")
         else:
             # self.start_date_custom.config(state="disabled")
-            self.start_date_custom.config(state="normal")
+            self.start_date_custom.config(state="disabled")
             self.end_date_custom.config(state="disabled")
 
     def select_plot(self, type):
